@@ -27,10 +27,10 @@ export default function Navbar() {
       <div className="gov-stripe" />
 
       {/* Top bar */}
-      <div className="bg-primary-800 text-white text-xs py-1 px-4 flex items-center justify-between">
-        <span className="font-display font-medium">🌾 FarmConnect — शेतकरी-विक्रेता थेट बाजार</span>
+      <div className="bg-primary-800 text-white text-[11px] sm:text-xs py-1.5 px-3 sm:px-4 flex items-center justify-between gap-2">
+        <span className="font-display font-medium truncate">🌾 FarmConnect — शेतकरी-विक्रेता थेट बाजार</span>
         <div className="flex items-center gap-3">
-          <span>Helpline: 1800-180-1551</span>
+          <span className="hidden sm:inline">Helpline: 1800-180-1551</span>
           <button
             onClick={toggleLang}
             className="bg-saffron-500 hover:bg-saffron-400 text-white text-xs font-bold px-3 py-0.5 rounded-full transition-colors"
@@ -41,15 +41,15 @@ export default function Navbar() {
       </div>
 
       {/* Main nav */}
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-3">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-800 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow transition-shadow">
             <span className="text-xl">🌾</span>
           </div>
-          <div>
-            <div className="font-display font-bold text-xl text-primary-800 leading-none">FarmConnect</div>
-            <div className="text-xs text-saffron-600 font-medium font-display">शेतकरी बाजारपेठ</div>
+          <div className="min-w-0">
+            <div className="font-display font-bold text-lg sm:text-xl text-primary-800 leading-none">FarmConnect</div>
+            <div className="text-[11px] sm:text-xs text-saffron-600 font-medium font-display truncate">शेतकरी बाजारपेठ</div>
           </div>
         </Link>
 
@@ -118,7 +118,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 px-4 pb-4 animate-fade-in">
+        <div className="lg:hidden bg-white border-t border-gray-100 px-4 pb-4 animate-fade-in max-h-[calc(100vh-7rem)] overflow-y-auto">
           <nav className="flex flex-col gap-1 pt-2">
             {navLinks.map(link => (
               <Link

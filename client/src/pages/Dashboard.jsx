@@ -51,7 +51,7 @@ function CropModal({ crop, onClose, onSave, lang }) {
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1.5 font-display uppercase tracking-wide">Crop Name *</label>
               <input type="text" required value={form.name} onChange={e => set('name', e.target.value)} className="input-field" placeholder="e.g. Soyabean" />
@@ -69,7 +69,7 @@ function CropModal({ crop, onClose, onSave, lang }) {
             </select>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="col-span-1">
               <label className="block text-xs font-semibold text-gray-600 mb-1.5 font-display uppercase tracking-wide">Price ₹/Quintal *</label>
               <input type="number" required min="1" value={form.pricePerQuintal} onChange={e => set('pricePerQuintal', e.target.value)} className="input-field" placeholder="2500" />
@@ -89,7 +89,7 @@ function CropModal({ crop, onClose, onSave, lang }) {
             <input type="text" required value={form.location} onChange={e => set('location', e.target.value)} className="input-field" placeholder="e.g. APMC Pune, Near Railway Station" />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-gray-600 mb-1.5 font-display uppercase tracking-wide">District</label>
               <input type="text" value={form.district} onChange={e => set('district', e.target.value)} className="input-field" placeholder="e.g. Nashik" />
@@ -131,8 +131,8 @@ function FarmerDashboard({ user, lang }) {
   return (
     <div className="space-y-6">
       {/* Welcome card */}
-      <div className="bg-gradient-to-r from-primary-700 to-primary-600 text-white rounded-2xl p-6">
-        <div className="flex items-start justify-between">
+      <div className="bg-gradient-to-r from-primary-700 to-primary-600 text-white rounded-2xl p-5 sm:p-6">
+        <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-primary-200 text-sm mb-1">{lang === 'mr' ? 'स्वागत आहे 🙏' : 'Welcome 🙏'}</p>
             <h2 className="font-display font-bold text-2xl">{user.name}</h2>
@@ -176,7 +176,7 @@ function FarmerDashboard({ user, lang }) {
         ) : (
           <div className="space-y-3">
             {crops.map(crop => (
-              <div key={crop._id} className="card p-4 flex items-center gap-4">
+              <div key={crop._id} className="card p-4 flex flex-col sm:flex-row sm:items-center gap-4">
                 <div className="flex-1">
                   <div className="font-display font-bold text-gray-800">{crop.nameMarathi || crop.name}</div>
                   <div className="text-xs text-gray-500">{crop.name} • {crop.location}, {crop.district || crop.state}</div>
@@ -260,7 +260,7 @@ function VendorDashboard({ user, lang }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-saffron-600 to-saffron-500 text-white rounded-2xl p-6 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-saffron-600 to-saffron-500 text-white rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <p className="text-saffron-100 text-sm mb-1">{lang === 'mr' ? 'विक्रेता डॅशबोर्ड' : 'Vendor Dashboard'}</p>
           <h2 className="font-display font-bold text-2xl">{user.name}</h2>
@@ -269,11 +269,11 @@ function VendorDashboard({ user, lang }) {
         <div className="text-5xl">🏪</div>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h3 className="font-display font-bold text-lg text-gray-800">
           {lang === 'mr' ? 'माझ्या पीक याद्या' : 'My Crop Listings'} ({crops.length})
         </h3>
-        <button onClick={() => setModal('add')} className="btn-primary text-sm">
+          <button onClick={() => setModal('add')} className="btn-primary text-sm w-full sm:w-auto">
           + {lang === 'mr' ? 'नवीन पीक जोडा' : 'Add Crop Listing'}
         </button>
       </div>
@@ -286,7 +286,7 @@ function VendorDashboard({ user, lang }) {
         <div className="space-y-3">
           {crops.map(crop => (
             <div key={crop._id} className={`card p-4 border ${crop.isActive ? 'border-transparent' : 'border-red-200 opacity-60'}`}>
-              <div className="flex items-start gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-display font-bold text-gray-800">{crop.name}</span>
@@ -302,7 +302,7 @@ function VendorDashboard({ user, lang }) {
                 <div className="text-right shrink-0">
                   <div className="font-display font-bold text-xl text-primary-700">₹{crop.pricePerQuintal?.toLocaleString()}</div>
                   <div className="text-xs text-gray-400 mb-3">/क्विंटल</div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 justify-end flex-wrap">
                     <button onClick={() => setModal(crop)} className="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded-lg font-semibold transition-colors">
                       ✏️ {lang === 'mr' ? 'संपादित' : 'Edit'}
                     </button>
@@ -398,7 +398,7 @@ function AdminDashboard({ lang }) {
   return (
     <div className="space-y-6">
       {/* Admin header */}
-      <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white rounded-2xl p-6">
+      <div className="bg-gradient-to-r from-gray-800 to-gray-700 text-white rounded-2xl p-5 sm:p-6">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-gray-400 text-sm mb-1">Admin Panel</p>
@@ -418,7 +418,7 @@ function AdminDashboard({ lang }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
+      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 overflow-x-auto">
         {[
           { key: 'pending', label: `Pending (${pendingVendors.length})` },
           { key: 'vendors', label: `All Vendors (${approvedVendors.length})` },
@@ -426,7 +426,7 @@ function AdminDashboard({ lang }) {
           { key: 'crops', label: `Listings (${crops.length})` },
         ].map(t2 => (
           <button key={t2.key} onClick={() => setTab(t2.key)}
-            className={`flex-1 py-2.5 rounded-lg text-xs font-semibold font-display transition-all ${tab === t2.key ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
+            className={`py-2.5 px-3 rounded-lg text-xs font-semibold font-display transition-all whitespace-nowrap ${tab === t2.key ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
             {t2.label}
           </button>
         ))}
@@ -442,14 +442,14 @@ function AdminDashboard({ lang }) {
               {pendingVendors.length === 0 ? (
                 <EmptyState icon="✅" message="No pending approvals" />
               ) : pendingVendors.map(v => (
-                <div key={v._id} className="card p-4 border-l-4 border-saffron-400 flex items-center gap-4">
+                <div key={v._id} className="card p-4 border-l-4 border-saffron-400 flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-saffron-100 flex items-center justify-center font-bold text-saffron-700">{v.name?.[0]}</div>
                   <div className="flex-1">
                     <div className="font-display font-bold text-gray-800">{v.name}</div>
                     <div className="text-xs text-gray-500">{v.email} • {v.phone}</div>
                     <div className="text-xs text-gray-400">{v.district}, {v.state} • Registered: {new Date(v.createdAt).toLocaleDateString('en-IN')}</div>
                   </div>
-                  <div className="flex gap-2 shrink-0">
+                  <div className="flex gap-2 shrink-0 w-full sm:w-auto">
                     <button onClick={() => approve(v._id)} className="btn-primary text-xs py-2 px-3">✅ Approve</button>
                     <button onClick={() => setConfirmAction({ type: 'reject', id: v._id, name: v.name })} className="btn-outline text-xs py-2 px-3 text-red-500 border-red-300 hover:bg-red-50">❌ Reject</button>
                   </div>
@@ -463,7 +463,7 @@ function AdminDashboard({ lang }) {
             <div className="space-y-3">
               {approvedVendors.length === 0 ? <EmptyState icon="🏪" message="No approved vendors yet" /> :
                 approvedVendors.map(v => (
-                  <div key={v._id} className="card p-4 flex items-center gap-4">
+                  <div key={v._id} className="card p-4 flex flex-col sm:flex-row sm:items-center gap-4">
                     <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center font-bold text-primary-700">{v.name?.[0]}</div>
                     <div className="flex-1">
                       <div className="font-display font-bold text-gray-800">{v.name}</div>
@@ -471,7 +471,7 @@ function AdminDashboard({ lang }) {
                       <div className="text-xs text-gray-400">{v.district}, {v.state}</div>
                     </div>
                     <button onClick={() => setConfirmAction({ type: 'delete', id: v._id, name: v.name })}
-                      className="text-xs bg-red-50 text-red-500 hover:bg-red-100 px-3 py-1.5 rounded-lg font-semibold">🗑️ Delete</button>
+                      className="text-xs bg-red-50 text-red-500 hover:bg-red-100 px-3 py-1.5 rounded-lg font-semibold w-full sm:w-auto">🗑️ Delete</button>
                   </div>
                 ))
               }
@@ -501,7 +501,7 @@ function AdminDashboard({ lang }) {
             <div className="space-y-2">
               {crops.length === 0 ? <EmptyState icon="🌾" message="No crop listings yet" /> :
                 crops.map(crop => (
-                  <div key={crop._id} className="card p-3 flex items-center gap-3">
+                  <div key={crop._id} className="card p-3 flex flex-col sm:flex-row sm:items-center gap-3">
                     <div className="flex-1">
                       <div className="font-semibold text-sm text-gray-800 font-display">{crop.name} {crop.nameMarathi && `/ ${crop.nameMarathi}`}</div>
                       <div className="text-xs text-gray-500">By: {crop.vendor?.name} ({crop.vendor?.email}) • {crop.location}</div>
@@ -547,7 +547,7 @@ export default function Dashboard() {
   )
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-6 sm:py-8">
       {user.role === 'admin' && <AdminDashboard lang={lang} />}
       {user.role === 'vendor' && <VendorDashboard user={user} lang={lang} />}
       {user.role === 'farmer' && <FarmerDashboard user={user} lang={lang} />}

@@ -45,7 +45,7 @@ export default function Marketplace() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Search bar */}
-        <form onSubmit={handleSearch} className="flex gap-3 mb-6">
+        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 mb-6">
           <div className="relative flex-1">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -56,13 +56,13 @@ export default function Marketplace() {
               className="input-field pl-10"
             />
           </div>
-          <button type="submit" className="btn-primary px-6">{lang === 'mr' ? 'शोधा' : 'Search'}</button>
+          <button type="submit" className="btn-primary px-6 sm:w-auto w-full">{lang === 'mr' ? 'शोधा' : 'Search'}</button>
         </form>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Filters sidebar */}
-          <aside className="w-full md:w-56 shrink-0">
-            <div className="card p-4 sticky top-24">
+          <aside className="w-full lg:w-60 shrink-0">
+            <div className="card p-4 lg:sticky lg:top-24">
               <h3 className="font-display font-bold text-gray-700 text-sm uppercase tracking-wider mb-3">{t('category')}</h3>
               <div className="space-y-1">
                 {CATEGORIES.map(cat => (
@@ -98,7 +98,7 @@ export default function Marketplace() {
 
           {/* Results */}
           <main className="flex-1">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between gap-3 mb-4">
               <p className="text-gray-500 text-sm font-display">
                 {loading ? '...' : `${crops.length} ${lang === 'mr' ? 'याद्या आढळल्या' : 'listings found'}`}
               </p>

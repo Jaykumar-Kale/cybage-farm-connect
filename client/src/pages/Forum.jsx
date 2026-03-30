@@ -183,7 +183,7 @@ export default function Forum() {
 
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* New post button */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map(cat => (
               <button key={cat.key} onClick={() => setCatFilter(cat.key)}
@@ -217,7 +217,7 @@ export default function Forum() {
                   <option key={c.key} value={c.key}>{c.icon} {lang === 'mr' ? c.labelM : c.label}</option>
                 ))}
               </select>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button onClick={handleNewPost} disabled={submitting} className="btn-primary flex-1 disabled:opacity-50">
                   {submitting ? '...' : (lang === 'mr' ? 'पोस्ट करा' : 'Post')}
                 </button>

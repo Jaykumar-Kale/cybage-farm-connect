@@ -106,13 +106,13 @@ export default function Home() {
             {lang === 'mr' ? '३ सोप्या पायऱ्यांमध्ये' : 'In 3 Simple Steps'}
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {[
             { step: '01', icon: '👨‍🌾', title: lang === 'mr' ? 'शेतकरी नोंदणी करतो' : 'Farmer Registers', desc: lang === 'mr' ? 'शेतकरी मोफत नोंदणी करतो आणि थेट भाव पाहतो' : 'Farmer registers for free and views live buying prices' },
             { step: '02', icon: '🏪', title: lang === 'mr' ? 'विक्रेता भाव टाकतो' : 'Vendor Posts Prices', desc: lang === 'mr' ? 'मंजूर विक्रेते पीक खरेदी भाव प्रकाशित करतात' : 'Approved vendors publish crop buying prices transparently' },
             { step: '03', icon: '🤝', title: lang === 'mr' ? 'थेट व्यवहार होतो' : 'Direct Deal Happens', desc: lang === 'mr' ? 'शेतकरी संपर्क करतो आणि थेट सौदा होतो — कोणताही दलाल नाही' : 'Farmer contacts vendor directly — no middlemen involved' },
           ].map((s, i) => (
-            <div key={i} className="card p-7 text-center hover:border-primary-200 border border-transparent group">
+            <div key={i} className="card p-5 md:p-7 text-center hover:border-primary-200 border border-transparent group">
               <div className="text-5xl mb-4">{s.icon}</div>
               <div className="text-5xl font-bold text-primary-100 font-display mb-2 group-hover:text-primary-200 transition-colors">{s.step}</div>
               <h3 className="font-display font-bold text-lg text-gray-800 mb-2">{s.title}</h3>
@@ -125,7 +125,7 @@ export default function Home() {
       {/* Live Crop Prices */}
       <section className="py-14 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-start sm:items-center justify-between gap-3 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -186,7 +186,7 @@ export default function Home() {
 
       {/* MSP Banner */}
       <section className="bg-gradient-to-r from-saffron-600 to-saffron-500 text-white py-10">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
             <h2 className="font-display font-bold text-2xl md:text-3xl mb-2">
               {lang === 'mr' ? 'MSP दर २०२४-२५ पाहा' : 'Check MSP Rates 2024-25'}
@@ -195,7 +195,7 @@ export default function Home() {
               {lang === 'mr' ? 'सरकारने घोषित केलेले किमान आधारभूत किंमत' : 'Minimum Support Price announced by Govt of India — CCEA'}
             </p>
           </div>
-          <Link to="/msp" className="bg-white text-saffron-700 font-bold font-display px-8 py-3 rounded-lg hover:bg-saffron-50 transition-colors shadow-lg whitespace-nowrap">
+          <Link to="/msp" className="bg-white text-saffron-700 font-bold font-display px-6 md:px-8 py-3 rounded-lg hover:bg-saffron-50 transition-colors shadow-lg text-center w-full sm:w-auto">
             MSP दर पाहा →
           </Link>
         </div>

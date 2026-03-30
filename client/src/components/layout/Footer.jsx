@@ -4,9 +4,9 @@ import { useLang } from '../../context/LangContext'
 export default function Footer() {
   const { t } = useLang()
   return (
-    <footer className="bg-primary-900 text-white mt-16">
+    <footer className="bg-primary-900 text-white mt-12 md:mt-16">
       <div className="gov-stripe" />
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      <div className="max-w-7xl mx-auto px-4 py-8 md:py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-3 mb-3">
@@ -16,7 +16,7 @@ export default function Footer() {
                 <div className="text-primary-300 text-sm">शेतकरी बाजारपेठ</div>
               </div>
             </div>
-            <p className="text-primary-200 text-sm leading-relaxed max-w-sm">
+            <p className="text-primary-200 text-sm leading-relaxed max-w-md">
               Eliminating middlemen and ensuring fair, transparent pricing for Indian farmers. Direct connection between farmers and verified vendors.
             </p>
             <p className="text-saffron-400 font-display font-bold text-lg mt-4">{t('footer_tagline')}</p>
@@ -46,7 +46,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-primary-700 mt-8 pt-6 flex flex-col md:flex-row items-center justify-between text-xs text-primary-400 gap-2">
+        <div className="border-t border-primary-700 mt-8 pt-6 flex flex-col md:flex-row items-start md:items-center justify-between text-xs text-primary-400 gap-2">
           <p>© 2025 FarmConnect. Built for farmers of Maharashtra & India.</p>
           <p>Helpline: <span className="text-saffron-400 font-semibold">1800-180-1551</span> | Kisan Call Centre</p>
         </div>

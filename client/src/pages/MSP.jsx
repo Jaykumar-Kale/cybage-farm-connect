@@ -39,7 +39,7 @@ export default function MSP() {
         </div>
 
         {/* Season tabs */}
-        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6 max-w-xs">
+        <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6 w-full sm:max-w-xs">
           {['kharif', 'rabi'].map(s => (
             <button
               key={s}
@@ -70,7 +70,8 @@ export default function MSP() {
           <div className="flex justify-center py-16"><div className="w-10 h-10 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" style={{ borderWidth: '3px' }} /></div>
         ) : (
           <div className="card overflow-hidden">
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm min-w-[680px]">
               <thead>
                 <tr className="bg-primary-700 text-white">
                   <th className="text-left px-4 py-4 font-display font-semibold">
@@ -105,7 +106,8 @@ export default function MSP() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+              </table>
+            </div>
             {filtered.length === 0 && (
               <div className="text-center py-8 text-gray-400">
                 <p>No crops matching "{search}"</p>

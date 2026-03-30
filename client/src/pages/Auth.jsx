@@ -146,7 +146,7 @@ export default function AuthPage() {
                   <input type="tel" value={form.phone} onChange={e => set('phone', e.target.value)}
                     className="input-field" placeholder="9876543210" />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5 font-display">{t('state')}</label>
                     <select value={form.state} onChange={e => set('state', e.target.value)} className="input-field">

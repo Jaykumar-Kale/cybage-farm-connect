@@ -74,7 +74,7 @@ function SchemeCard({ scheme, lang }) {
           </div>
         )}
 
-        <div className="flex items-center gap-3 mt-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 mt-4">
           <button
             onClick={() => setExpanded(!expanded)}
             className="text-sm text-primary-600 font-semibold hover:text-primary-800 transition-colors font-display"
@@ -83,7 +83,7 @@ function SchemeCard({ scheme, lang }) {
           </button>
           <a
             href={scheme.link} target="_blank" rel="noopener noreferrer"
-            className="ml-auto btn-primary text-xs py-2 px-4"
+            className="sm:ml-auto btn-primary text-xs py-2 px-4 text-center"
           >
             {lang === 'mr' ? 'अर्ज करा ↗' : 'Apply Now ↗'}
           </a>
@@ -153,7 +153,7 @@ export default function Schemes() {
         )}
 
         {/* Helpline banner */}
-        <div className="mt-10 bg-primary-800 text-white rounded-2xl p-8 text-center">
+        <div className="mt-10 bg-primary-800 text-white rounded-2xl p-6 sm:p-8 text-center">
           <div className="text-4xl mb-3">📞</div>
           <h3 className="font-display font-bold text-xl mb-2">
             {lang === 'mr' ? 'किसान कॉल सेंटर' : 'Kisan Call Centre'}
