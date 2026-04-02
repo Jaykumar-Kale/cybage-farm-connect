@@ -1,167 +1,122 @@
-// Spinner
-export function Spinner({ size = 'md' }) {
-  const s = { sm: 'w-4 h-4', md: 'w-8 h-8', lg: 'w-12 h-12' }[size]
-  return (
-    <div className={`${s} border-3 border-primary-200 border-t-primary-600 rounded-full animate-spin`}
-      style={{ borderWidth: '3px' }} />
-  )
+import { useEffect, useRef, useState } from 'react'
+
+export function Spinner({ size='md', white=false }) {
+  const s = {sm:'w-4 h-4',md:'w-7 h-7',lg:'w-10 h-10'}[size]
+  const c = white ? 'border-white/30 border-t-white' : 'border-brand-200 border-t-brand-600'
+  return <div className={`${s} ${c} rounded-full animate-spin`} style={{borderWidth:2.5}}/>
 }
 
-// Loading page
-export function LoadingPage() {
-  return (
-    <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-      <Spinner size="lg" />
-      <p className="text-gray-500 font-display animate-pulse">लोड होत आहे...</p>
-    </div>
-  )
+export function PageLoader() {
+  return <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3"><Spinner size="lg"/><p className="text-sm text-gray-400 animate-pulse">Loading...</p></div>
 }
 
-// Error message
-export function ErrorMsg({ message }) {
+export function PageHeader({ title, subtitle, crumb }) {
   return (
-    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2">
-      <span>⚠️</span> {message}
-    </div>
-  )
-}
-
-// Stat card
-export function StatCard({ label, value, icon, color = 'green' }) {
-  const colors = {
-    green: 'bg-primary-50 border-primary-200 text-primary-700',
-    saffron: 'bg-saffron-50 border-saffron-200 text-saffron-700',
-    blue: 'bg-blue-50 border-blue-200 text-blue-700',
-    red: 'bg-red-50 border-red-200 text-red-700',
-  }
-  return (
-    <div className={`card p-5 border ${colors[color]} flex items-center gap-4`}>
-      <div className="text-3xl">{icon}</div>
-      <div>
-        <div className="text-2xl font-bold font-display">{value}</div>
-        <div className="text-sm font-medium opacity-80">{label}</div>
+    <div className="page-hero">
+      <div className="section py-8 md:py-10">
+        {crumb && <p className="text-brand-300 text-xs mb-1.5 font-medium tracking-wider uppercase">{crumb}</p>}
+        <h1 className="font-heading font-bold text-2xl md:text-3xl text-white leading-tight">{title}</h1>
+        {subtitle && <p className="text-brand-300 mt-1.5 text-sm">{subtitle}</p>}
       </div>
     </div>
   )
 }
 
-// Empty state
-export function EmptyState({ icon = '📭', message = 'No data found', sub }) {
+export function Empty({ title='No data found', sub, action }) {
   return (
-    <div className="text-center py-16 text-gray-400">
-      <div className="text-5xl mb-3">{icon}</div>
-      <p className="font-display font-semibold text-lg text-gray-500">{message}</p>
-      {sub && <p className="text-sm mt-1">{sub}</p>}
+    <div className="py-16 text-center">
+      <div className="w-16 h-16 rounded-2xl bg-gray-100 mx-auto mb-4 flex items-center justify-center">
+        <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+        </svg>
+      </div>
+      <h3 className="font-heading font-semibold text-gray-700 mb-1">{title}</h3>
+      {sub && <p className="text-sm text-gray-400 mb-4">{sub}</p>}
+      {action}
     </div>
   )
 }
 
-// Page header banner (govt portal style)
-export function PageHeader({ title, subtitle, icon }) {
+export function Counter({ value, prefix='', suffix='' }) {
+  const ref = useRef(); const [count, setCount] = useState(0)
+  const num = parseFloat(String(value).replace(/[^\d.]/g,'')) || 0
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        let s=0; const step=num/(1200/16)
+        const t = setInterval(() => { s+=step; if(s>=num){setCount(num);clearInterval(t)}else setCount(s) },16)
+        obs.disconnect()
+      }
+    },{threshold:0.3})
+    if(ref.current) obs.observe(ref.current)
+    return()=>obs.disconnect()
+  },[num])
+  const fmt = num>=10000000?`${(count/10000000).toFixed(1)}Cr`:num>=100000?`${(count/100000).toFixed(1)}L`:num>=1000?`${(count/1000).toFixed(1)}K`:Math.round(count).toLocaleString('en-IN')
+  return <span ref={ref}>{prefix}{fmt}{suffix}</span>
+}
+
+const CAT = {
+  grains:{label:'Grains',labelM:'धान्य',color:'bg-yellow-50 text-yellow-700 border-yellow-200'},
+  vegetables:{label:'Vegetables',labelM:'भाजीपाला',color:'bg-green-50 text-green-700 border-green-200'},
+  fruits:{label:'Fruits',labelM:'फळे',color:'bg-orange-50 text-orange-700 border-orange-200'},
+  pulses:{label:'Pulses',labelM:'कडधान्य',color:'bg-amber-50 text-amber-700 border-amber-200'},
+  oilseeds:{label:'Oilseeds',labelM:'तेलबिया',color:'bg-lime-50 text-lime-700 border-lime-200'},
+  spices:{label:'Spices',labelM:'मसाले',color:'bg-red-50 text-red-700 border-red-200'},
+  cotton:{label:'Cotton',labelM:'कापूस',color:'bg-sky-50 text-sky-700 border-sky-200'},
+  other:{label:'Other',labelM:'इतर',color:'bg-gray-100 text-gray-600 border-gray-200'},
+}
+
+export function CatBadge({ category, lang='en' }) {
+  const c = CAT[category]||CAT.other
+  return <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${c.color}`}>{lang==='mr'?c.labelM:c.label}</span>
+}
+
+export function CropCard({ crop, lang='en', showContact=true }) {
+  const ago = Math.floor((Date.now()-new Date(crop.updatedAt||crop.createdAt))/86400000)
   return (
-    <div className="bg-gradient-to-r from-primary-800 to-primary-700 text-white py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex items-center gap-3">
-          {icon && <span className="text-4xl">{icon}</span>}
-          <div>
-            <h1 className="font-display font-bold text-2xl md:text-3xl">{title}</h1>
-            {subtitle && <p className="text-primary-200 mt-1 text-sm md:text-base">{subtitle}</p>}
-          </div>
+    <div className="card p-5 flex flex-col hover:-translate-y-1 transition-transform duration-200">
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-heading font-bold text-gray-900 truncate">{crop.nameMarathi||crop.name}</h3>
+          {crop.nameMarathi && <p className="text-xs text-gray-400 truncate">{crop.name}</p>}
         </div>
+        <CatBadge category={crop.category} lang={lang}/>
+      </div>
+      <div className="bg-gradient-to-br from-brand-50 to-brand-100/50 border border-brand-200/60 rounded-xl p-3 text-center mb-3">
+        <div className="text-2xl font-bold font-heading text-brand-700">₹{crop.pricePerQuintal?.toLocaleString('en-IN')}</div>
+        <div className="text-xs text-brand-600 font-medium">{lang==='mr'?'प्रति क्विंटल':'per quintal'}</div>
+      </div>
+      <div className="space-y-1.5 text-xs text-gray-500 flex-1 mb-3">
+        <div className="flex items-center gap-1.5">
+          <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <span className="truncate">{crop.location}{crop.district?`, ${crop.district}`:''}</span>
+        </div>
+        {crop.minQuantity && <div className="flex items-center gap-1.5"><svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg><span>Min: {crop.minQuantity} qtl</span></div>}
+        {crop.vendor?.name && <div className="flex items-center gap-1.5"><svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span className="font-medium text-gray-700 truncate">{crop.vendor.name}</span></div>}
+      </div>
+      <div className="flex items-center justify-between">
+        {showContact && crop.vendor?.phone
+          ? <a href={`tel:${crop.vendor.phone}`} className="btn-primary text-xs py-2 px-3 flex-1 mr-2">{lang==='mr'?'संपर्क करा':'Contact Vendor'}</a>
+          : <div/>}
+        <span className="text-xs text-gray-400 shrink-0">{ago===0?'Today':`${ago}d ago`}</span>
       </div>
     </div>
   )
 }
 
-// Crop category badge
-export function CategoryBadge({ category }) {
-  const map = {
-    grains: { label: 'Grains / धान्य', color: 'bg-yellow-100 text-yellow-800', icon: '🌾' },
-    vegetables: { label: 'Vegetables / भाजीपाला', color: 'bg-green-100 text-green-800', icon: '🥦' },
-    fruits: { label: 'Fruits / फळे', color: 'bg-orange-100 text-orange-800', icon: '🍎' },
-    pulses: { label: 'Pulses / कडधान्य', color: 'bg-amber-100 text-amber-800', icon: '🫘' },
-    oilseeds: { label: 'Oilseeds / तेलबिया', color: 'bg-lime-100 text-lime-800', icon: '🌻' },
-    spices: { label: 'Spices / मसाले', color: 'bg-red-100 text-red-800', icon: '🌶️' },
-    cotton: { label: 'Cotton / कापूस', color: 'bg-blue-100 text-blue-800', icon: '🌸' },
-    other: { label: 'Other / इतर', color: 'bg-gray-100 text-gray-700', icon: '📦' },
-  }
-  const info = map[category] || map.other
+export function Confirm({ open, msg, onOk, onCancel, danger=true }) {
+  if (!open) return null
   return (
-    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${info.color}`}>
-      {info.icon} {info.label}
-    </span>
-  )
-}
-
-// Confirm modal
-export function ConfirmModal({ isOpen, onConfirm, onCancel, message, confirmText = 'Delete', danger = true }) {
-  if (!isOpen) return null
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 animate-fade-up">
-        <div className="text-3xl mb-3 text-center">⚠️</div>
-        <p className="text-center text-gray-700 font-medium mb-6">{message}</p>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-slide-up">
+        <div className="w-12 h-12 rounded-2xl bg-red-50 mx-auto mb-4 flex items-center justify-center">
+          <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        </div>
+        <p className="text-center text-gray-700 font-medium mb-6 leading-relaxed">{msg}</p>
         <div className="flex gap-3">
-          <button onClick={onCancel} className="flex-1 btn-outline text-sm">Cancel</button>
-          <button onClick={onConfirm} className={`flex-1 text-sm font-semibold px-4 py-2.5 rounded-lg transition-all ${danger ? 'bg-red-600 hover:bg-red-700 text-white' : 'btn-primary'}`}>
-            {confirmText}
-          </button>
+          <button onClick={onCancel} className="flex-1 btn-outline text-sm py-2.5">Cancel</button>
+          <button onClick={onOk} className={`flex-1 text-sm font-semibold px-4 py-2.5 rounded-xl transition-all ${danger?'bg-red-600 hover:bg-red-700 text-white':'btn-primary'}`}>Confirm</button>
         </div>
-      </div>
-    </div>
-  )
-}
-
-// Crop listing card for marketplace / farmer view
-export function CropCard({ crop, showContact = true }) {
-  const daysAgo = Math.floor((Date.now() - new Date(crop.updatedAt || crop.createdAt)) / 86400000)
-  return (
-    <div className="card p-5 hover:border-primary-200 border border-transparent transition-all group">
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <h3 className="font-display font-bold text-lg text-gray-800 group-hover:text-primary-700 transition-colors">
-            {crop.nameMarathi || crop.name}
-          </h3>
-          <p className="text-gray-500 text-sm">{crop.name}</p>
-        </div>
-        <CategoryBadge category={crop.category} />
-      </div>
-
-      <div className="bg-primary-50 border border-primary-100 rounded-lg p-3 mb-3 text-center">
-        <div className="text-3xl font-bold font-display text-primary-700">₹{crop.pricePerQuintal?.toLocaleString()}</div>
-        <div className="text-xs text-primary-600 font-medium">/क्विंटल (per quintal)</div>
-      </div>
-
-      <div className="space-y-1.5 text-sm text-gray-600 mb-4">
-        <div className="flex items-center gap-2">
-          <span>📍</span>
-          <span>{crop.location}{crop.district ? `, ${crop.district}` : ''}</span>
-        </div>
-        {crop.minQuantity && (
-          <div className="flex items-center gap-2">
-            <span>⚖️</span>
-            <span>Min: {crop.minQuantity} quintal{crop.minQuantity > 1 ? 's' : ''}</span>
-          </div>
-        )}
-        {crop.vendor?.name && (
-          <div className="flex items-center gap-2">
-            <span>🏪</span>
-            <span className="font-medium text-gray-700">{crop.vendor.name}</span>
-          </div>
-        )}
-      </div>
-
-      {showContact && crop.vendor?.phone && (
-        <a
-          href={`tel:${crop.vendor.phone}`}
-          className="w-full btn-primary text-sm text-center block"
-        >
-          📞 संपर्क करा — {crop.vendor.phone}
-        </a>
-      )}
-
-      <div className="mt-2 text-xs text-gray-400 text-right">
-        {daysAgo === 0 ? 'Today' : `${daysAgo}d ago`}
       </div>
     </div>
   )

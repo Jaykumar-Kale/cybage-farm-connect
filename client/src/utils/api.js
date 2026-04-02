@@ -1,27 +1,11 @@
 import axios from 'axios'
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-  headers: { 'Content-Type': 'application/json' }
+const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'https://farmconnect-api-cqc0.onrender.com/api' })
+api.interceptors.request.use(cfg => {
+  try { const u = JSON.parse(localStorage.getItem('fc_user')); if (u?.token) cfg.headers.Authorization = `Bearer ${u.token}`; } catch {}
+  return cfg;
 })
-
-api.interceptors.request.use(config => {
-  try {
-    const user = JSON.parse(localStorage.getItem('fc_user'))
-    if (user?.token) config.headers.Authorization = `Bearer ${user.token}`
-  } catch {}
-  return config
+api.interceptors.response.use(r => r, err => {
+  if (err.response?.status === 401) { localStorage.removeItem('fc_user'); window.location.href = '/login'; }
+  return Promise.reject(err);
 })
-
-api.interceptors.response.use(
-  res => res,
-  err => {
-    if (err.response?.status === 401) {
-      localStorage.removeItem('fc_user')
-      window.location.href = '/login'
-    }
-    return Promise.reject(err)
-  }
-)
-
 export default api

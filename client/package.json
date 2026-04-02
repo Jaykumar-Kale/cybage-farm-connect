@@ -1,13 +1,9 @@
 {
-  "name": "farmconnect-frontend",
+  "name": "farmconnect-client",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
+  "scripts": { "dev": "vite", "build": "vite build", "preview": "vite preview" },
   "dependencies": {
     "axios": "^1.4.0",
     "react": "^18.2.0",

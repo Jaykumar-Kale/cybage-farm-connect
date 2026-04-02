@@ -3,221 +3,162 @@ import { Link } from 'react-router-dom'
 import { useLang } from '../context/LangContext'
 import { useAuth } from '../context/AuthContext'
 import api from '../utils/api'
-import { CropCard, LoadingPage } from '../components/common/UI'
-
-const SCHEMES_PREVIEW = [
-  { name: 'PM-KISAN', nameM: 'पीएम किसान', icon: '💰', benefit: '₹6,000/year', color: 'border-green-400', link: '/schemes' },
-  { name: 'Kisan Credit Card', nameM: 'किसान क्रेडिट कार्ड', icon: '💳', benefit: '4% interest loan', color: 'border-blue-400', link: '/schemes' },
-  { name: 'PMFBY Insurance', nameM: 'फसल बीमा', icon: '🛡️', benefit: '2% premium only', color: 'border-red-400', link: '/schemes' },
-  { name: 'eNAM Market', nameM: 'eNAM बाजार', icon: '🏪', benefit: 'Online mandi', color: 'border-yellow-400', link: '/schemes' },
-]
+import { CropCard, Counter } from '../components/common/UI'
 
 const STATS = [
-  { icon: '👨‍🌾', value: '1.2 Cr+', label: 'Registered Farmers', labelM: 'नोंदणीकृत शेतकरी' },
-  { icon: '🏪', value: '8,500+', label: 'Active Vendors', labelM: 'सक्रिय विक्रेते' },
-  { icon: '🌾', value: '50+', label: 'Crops Listed', labelM: 'पिके सूचीबद्ध' },
-  { icon: '💰', value: '₹0', label: 'Commission / Fee', labelM: 'कोणताही दलाली नाही' },
+  { val:'12000000', pre:'1.2', suf:'Cr+', en:'Registered Farmers', mr:'नोंदणीकृत शेतकरी' },
+  { val:'8500',     pre:'8,500', suf:'+',  en:'Active Vendors',     mr:'सक्रिय विक्रेते' },
+  { val:'50',       pre:'50',   suf:'+',  en:'Crops Listed',        mr:'पिके सूचीबद्ध' },
+  { val:'0',        pre:'0',    suf:'%',  en:'Commission Charged',  mr:'कोणती दलाली नाही' },
+]
+
+const SCHEMES = [
+  { name:'PM-KISAN', benefit:'₹6,000/year', en:'Direct income support', mr:'थेट उत्पन्न सहाय्य', c:'from-green-500 to-green-700' },
+  { name:'KCC', benefit:'4% interest', en:'Subsidised crop loan', mr:'अनुदानित पीक कर्ज', c:'from-blue-500 to-blue-700' },
+  { name:'PMFBY', benefit:'2% premium', en:'Crop insurance cover', mr:'पीक विमा', c:'from-red-500 to-red-700' },
+  { name:'eNAM', benefit:'Online mandi', en:'Pan-India market', mr:'राष्ट्रीय बाजारपेठ', c:'from-amber-500 to-amber-600' },
 ]
 
 export default function Home() {
-  const { t, lang } = useLang()
+  const { lang } = useLang()
   const { user } = useAuth()
   const [crops, setCrops] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get('/crops?limit=6').then(r => setCrops(r.data.slice(0, 6))).catch(() => {}).finally(() => setLoading(false))
+    api.get('/crops').then(r => setCrops(r.data.slice(0,6))).catch(()=>{}).finally(()=>setLoading(false))
   }, [])
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 text-white overflow-hidden">
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-10"
-          style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
-
-        {/* Decorative crops */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 flex items-center justify-center opacity-20 text-[180px] select-none hidden md:flex">
-          🌾
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 py-16 md:py-24">
-          <div className="max-w-2xl">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-saffron-500/20 border border-saffron-400/40 text-saffron-300 px-4 py-1.5 rounded-full text-sm font-semibold font-display mb-6 animate-fade-up">
-              <span className="w-2 h-2 bg-saffron-400 rounded-full animate-pulse" />
-              🇮🇳 Jai Jawan Jai Kisan
+    <div>
+      {/* Hero */}
+      <section className="relative page-hero overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.06]" style={{backgroundImage:'linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)',backgroundSize:'60px 60px'}}/>
+        <div className="absolute -right-32 -top-32 w-[500px] h-[500px] rounded-full bg-brand-700/20 blur-3xl"/>
+        <div className="absolute -left-20 bottom-0 w-72 h-72 rounded-full bg-saffron-500/10 blur-3xl"/>
+        <div className="relative section py-20 md:py-28">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/90 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 animate-slide-up">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"/>
+              {lang==='mr'?'जय जवान जय किसान — शेतकरी शक्ती':'Jai Jawan Jai Kisan — Empowering Indian Farmers'}
             </div>
-
-            <h1 className="font-display font-extrabold text-3xl md:text-5xl leading-tight mb-4 animate-fade-up anim-delay-1 opacity-0" style={{ animationFillMode: 'forwards' }}>
-              {lang === 'mr' ? (
-                <>शेतकरी ते विक्रेता<br /><span className="text-saffron-400">थेट बाजारपेठ</span></>
-              ) : (
-                <>Direct Farmer to<br /><span className="text-saffron-400">Vendor Marketplace</span></>
-              )}
+            <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-5 opacity-0 animate-slide-up anim-d1" style={{animationFillMode:'forwards'}}>
+              {lang==='mr'?<>शेतकरी ते विक्रेता<br/><span style={{background:'linear-gradient(135deg,#fdba74,#f97316)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>थेट बाजारपेठ</span></>:<>Direct Farmer to<br/><span style={{background:'linear-gradient(135deg,#fdba74,#f97316)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>Vendor Marketplace</span></>}
             </h1>
-            <p className="text-primary-200 text-lg mb-2 animate-fade-up anim-delay-2 opacity-0" style={{ animationFillMode: 'forwards' }}>
-              {lang === 'mr' ? 'दलाल नको. योग्य भाव मिळवा. एकत्र वाढूया.' : 'Eliminate middlemen. Get fair prices. Grow together.'}
-            </p>
-            <p className="text-primary-300 text-sm mb-8 animate-fade-up anim-delay-2 opacity-0" style={{ animationFillMode: 'forwards' }}>
-              महाराष्ट्र आणि संपूर्ण भारतातील शेतकऱ्यांसाठी
-            </p>
-
-            <div className="flex flex-wrap gap-3 animate-fade-up anim-delay-3 opacity-0" style={{ animationFillMode: 'forwards' }}>
-              <Link to="/marketplace" className="btn-secondary text-base px-7 py-3 shadow-lg">
-                {t('hero_btn')} →
+            <p className="text-brand-200 text-lg md:text-xl mb-2 leading-relaxed opacity-0 animate-slide-up anim-d2" style={{animationFillMode:'forwards'}}>{lang==='mr'?'दलाल नको. पारदर्शक भाव. थेट व्यवहार.':'No middlemen. Transparent pricing. Direct deals.'}</p>
+            <p className="text-brand-400 text-sm mb-10 opacity-0 animate-slide-up anim-d2" style={{animationFillMode:'forwards'}}>{lang==='mr'?'महाराष्ट्र आणि संपूर्ण भारतातील शेतकऱ्यांसाठी':'For farmers across Maharashtra and India'}</p>
+            <div className="flex flex-wrap gap-3 opacity-0 animate-slide-up anim-d3" style={{animationFillMode:'forwards'}}>
+              <Link to="/marketplace" className="btn-secondary px-7 py-3.5 text-sm shadow-lg">
+                {lang==='mr'?'थेट भाव पाहा':'View Live Prices'}
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
               </Link>
-              {!user && (
-                <Link to="/register" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold px-7 py-3 rounded-lg transition-all font-display">
-                  नोंदणी करा — Register
-                </Link>
-              )}
+              {!user && <Link to="/register?tab=register" className="bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold px-7 py-3.5 rounded-xl transition-all text-sm">{lang==='mr'?'मोफत नोंदणी करा':'Register Free'}</Link>}
             </div>
           </div>
         </div>
-
-        {/* Wave divider */}
-        <svg className="w-full" viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z" fill="#f9fafb" />
-        </svg>
+        <svg className="w-full block -mb-1" viewBox="0 0 1440 64" fill="none"><path d="M0,48 C240,0 480,80 720,48 C960,16 1200,64 1440,32 L1440,64 L0,64 Z" fill="#f8fafc"/></svg>
       </section>
 
-      {/* Stats bar */}
-      <section className="bg-gray-50 py-8 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6">
-          {STATS.map((s, i) => (
-            <div key={i} className="text-center animate-fade-up" style={{ animationDelay: `${i * 0.1}s`, animationFillMode: 'forwards', opacity: 0 }}>
-              <div className="text-3xl mb-1">{s.icon}</div>
-              <div className="font-display font-bold text-2xl text-primary-700">{s.value}</div>
-              <div className="text-gray-500 text-xs">{lang === 'mr' ? s.labelM : s.label}</div>
-            </div>
-          ))}
+      {/* Stats */}
+      <section className="bg-gray-50 border-b border-gray-200">
+        <div className="section py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {STATS.map((s,i) => (
+              <div key={i} className="text-center opacity-0 animate-slide-up" style={{animationDelay:`${i*0.08}s`,animationFillMode:'forwards'}}>
+                <div className="text-3xl md:text-4xl font-heading font-extrabold text-brand-700 mb-1">
+                  <Counter value={s.pre} suffix={s.suf}/>
+                </div>
+                <div className="text-xs text-gray-500 font-medium">{lang==='mr'?s.mr:s.en}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* How it works */}
-      <section className="py-14 max-w-7xl mx-auto px-4">
-        <div className="text-center mb-10">
-          <div className="inline-block bg-primary-100 text-primary-700 font-semibold text-sm px-4 py-1 rounded-full mb-3 font-display">
-            {lang === 'mr' ? 'हे कसे काम करते' : 'How It Works'}
-          </div>
-          <h2 className="section-title">
-            {lang === 'mr' ? '३ सोप्या पायऱ्यांमध्ये' : 'In 3 Simple Steps'}
-          </h2>
+      <section className="section py-16 md:py-20">
+        <div className="text-center mb-12">
+          <div className="inline-block text-xs font-semibold text-brand-600 bg-brand-50 border border-brand-200 px-4 py-1.5 rounded-full mb-3 tracking-wider uppercase">{lang==='mr'?'हे कसे काम करते':'How It Works'}</div>
+          <h2 className="font-heading font-bold text-2xl md:text-3xl text-gray-900">{lang==='mr'?'तीन सोप्या पायऱ्यांमध्ये':'Three Simple Steps'}</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { step: '01', icon: '👨‍🌾', title: lang === 'mr' ? 'शेतकरी नोंदणी करतो' : 'Farmer Registers', desc: lang === 'mr' ? 'शेतकरी मोफत नोंदणी करतो आणि थेट भाव पाहतो' : 'Farmer registers for free and views live buying prices' },
-            { step: '02', icon: '🏪', title: lang === 'mr' ? 'विक्रेता भाव टाकतो' : 'Vendor Posts Prices', desc: lang === 'mr' ? 'मंजूर विक्रेते पीक खरेदी भाव प्रकाशित करतात' : 'Approved vendors publish crop buying prices transparently' },
-            { step: '03', icon: '🤝', title: lang === 'mr' ? 'थेट व्यवहार होतो' : 'Direct Deal Happens', desc: lang === 'mr' ? 'शेतकरी संपर्क करतो आणि थेट सौदा होतो — कोणताही दलाल नाही' : 'Farmer contacts vendor directly — no middlemen involved' },
-          ].map((s, i) => (
-            <div key={i} className="card p-5 md:p-7 text-center hover:border-primary-200 border border-transparent group">
-              <div className="text-5xl mb-4">{s.icon}</div>
-              <div className="text-5xl font-bold text-primary-100 font-display mb-2 group-hover:text-primary-200 transition-colors">{s.step}</div>
-              <h3 className="font-display font-bold text-lg text-gray-800 mb-2">{s.title}</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Live Crop Prices */}
-      <section className="py-14 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-start sm:items-center justify-between gap-3 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <span className="text-green-600 text-sm font-semibold font-display uppercase tracking-wide">Live</span>
+            {n:'01',en:'Farmer Registers',mr:'शेतकरी नोंदणी करतो',den:'Register free and browse live crop buying prices from verified vendors.',dmr:'मोफत नोंदणी करा आणि विक्रेत्यांचे थेट भाव पाहा.'},
+            {n:'02',en:'Vendor Posts Prices',mr:'विक्रेता भाव टाकतो',den:'Approved vendors publish transparent crop buying prices with location.',dmr:'मंजूर विक्रेते पारदर्शक पीक खरेदी भाव प्रकाशित करतात.'},
+            {n:'03',en:'Direct Deal Happens',mr:'थेट व्यवहार होतो',den:'Farmer contacts vendor directly — no middleman, fair price guaranteed.',dmr:'शेतकरी थेट विक्रेत्याशी संपर्क करतो — कोणताही दलाल नाही.'},
+          ].map((s,i) => (
+            <div key={i} className="card p-7 text-center hover:-translate-y-1 transition-transform">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 mx-auto mb-5 flex items-center justify-center shadow-md">
+                <span className="font-heading font-bold text-white text-lg">{s.n}</span>
               </div>
-              <h2 className="section-title">{t('live_prices')}</h2>
-              <p className="text-gray-500 text-sm mt-1">थेट पीक खरेदी भाव — विक्रेत्यांनी प्रकाशित केलेले</p>
+              <h3 className="font-heading font-bold text-gray-900 text-lg mb-2">{lang==='mr'?s.mr:s.en}</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">{lang==='mr'?s.dmr:s.den}</p>
             </div>
-            <Link to="/marketplace" className="btn-outline hidden md:block">
-              सर्व पाहा →
-            </Link>
-          </div>
-
-          {loading ? (
-            <div className="flex justify-center py-12"><div className="w-10 h-10 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" style={{ borderWidth: '3px' }} /></div>
-          ) : crops.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
-              <div className="text-5xl mb-3">🌾</div>
-              <p className="font-display">No crop listings yet. Vendors will publish soon.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {crops.map(crop => <CropCard key={crop._id} crop={crop} />)}
-            </div>
-          )}
-          <div className="text-center mt-6">
-            <Link to="/marketplace" className="btn-primary">
-              {lang === 'mr' ? 'सर्व पिके पाहा' : 'View All Crops'} →
-            </Link>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Govt Schemes Preview */}
-      <section className="py-14 max-w-7xl mx-auto px-4">
-        <div className="text-center mb-10">
-          <div className="inline-block bg-saffron-100 text-saffron-700 font-semibold text-sm px-4 py-1 rounded-full mb-3 font-display">
-            🇮🇳 {lang === 'mr' ? 'सरकारी योजना' : 'Government Schemes'}
+      {/* Live Prices */}
+      <section className="bg-gray-50 py-16 md:py-20">
+        <div className="section">
+          <div className="flex items-end justify-between mb-8 gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"/><span className="text-xs font-semibold text-green-600 uppercase tracking-wider">Live</span></div>
+              <h2 className="font-heading font-bold text-2xl md:text-3xl text-gray-900">{lang==='mr'?'थेट पीक खरेदी भाव':'Live Crop Buying Prices'}</h2>
+              <p className="text-sm text-gray-500 mt-1">{lang==='mr'?'विक्रेत्यांनी प्रकाशित केलेले':'Published directly by verified vendors'}</p>
+            </div>
+            <Link to="/marketplace" className="btn-outline text-sm shrink-0 hidden md:flex">{lang==='mr'?'सर्व पाहा':'View All'}<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></Link>
           </div>
-          <h2 className="section-title">{t('govt_schemes')}</h2>
-          <p className="text-gray-500 text-sm mt-2">शेतकऱ्यांसाठी महत्त्वाच्या सरकारी योजना</p>
+          {loading
+            ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">{[...Array(6)].map((_,i)=><div key={i} className="card p-5 space-y-3"><div className="shimmer h-5 rounded w-3/4"/><div className="shimmer h-16 rounded"/><div className="shimmer h-4 rounded w-1/2"/></div>)}</div>
+            : crops.length===0
+              ? <div className="text-center py-16 text-gray-400"><div className="w-16 h-16 rounded-2xl bg-gray-100 mx-auto mb-4"/><p className="font-semibold text-gray-600">{lang==='mr'?'अजून कोणते भाव उपलब्ध नाही':'No prices available yet'}</p></div>
+              : <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">{crops.map(c=><CropCard key={c._id} crop={c} lang={lang}/>)}</div>}
+          <div className="text-center mt-8"><Link to="/marketplace" className="btn-primary">{lang==='mr'?'सर्व पिके पाहा':'View All Crops'}</Link></div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          {SCHEMES_PREVIEW.map((s, i) => (
-            <Link key={i} to={s.link} className={`card p-5 border-l-4 ${s.color} hover:scale-[1.02] transition-transform`}>
-              <div className="text-3xl mb-3">{s.icon}</div>
-              <h3 className="font-display font-bold text-gray-800 text-sm">{lang === 'mr' ? s.nameM : s.name}</h3>
-              <p className="text-primary-600 font-semibold text-sm mt-1">{s.benefit}</p>
+      </section>
+
+      {/* Schemes preview */}
+      <section className="section py-16 md:py-20">
+        <div className="text-center mb-10">
+          <div className="inline-block text-xs font-semibold text-saffron-600 bg-saffron-50 border border-saffron-200 px-4 py-1.5 rounded-full mb-3 tracking-wider uppercase">{lang==='mr'?'सरकारी योजना':'Government Schemes'}</div>
+          <h2 className="font-heading font-bold text-2xl md:text-3xl text-gray-900">{lang==='mr'?'शेतकऱ्यांसाठी महत्त्वाच्या योजना':'Important Schemes for Farmers'}</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {SCHEMES.map((s,i)=>(
+            <Link key={i} to="/schemes" className="card p-5 hover:-translate-y-1 transition-transform">
+              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.c} mb-4 shadow-sm`}/>
+              <h3 className="font-heading font-bold text-gray-900 text-sm mb-1">{s.name}</h3>
+              <div className="font-bold text-lg text-brand-700 font-heading mb-1">{s.benefit}</div>
+              <p className="text-xs text-gray-500">{lang==='mr'?s.mr:s.en}</p>
             </Link>
           ))}
         </div>
-        <div className="text-center">
-          <Link to="/schemes" className="btn-secondary">
-            {lang === 'mr' ? 'सर्व योजना पाहा' : 'View All Schemes'} →
-          </Link>
-        </div>
+        <div className="text-center"><Link to="/schemes" className="btn-secondary">{lang==='mr'?'सर्व योजना पाहा':'View All Schemes'}</Link></div>
       </section>
 
-      {/* MSP Banner */}
-      <section className="bg-gradient-to-r from-saffron-600 to-saffron-500 text-white py-10">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      {/* MSP banner */}
+      <section className="mx-4 sm:mx-6 md:mx-auto max-w-7xl mb-16 rounded-2xl overflow-hidden">
+        <div className="bg-gradient-to-r from-saffron-600 to-saffron-500 text-white px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h2 className="font-display font-bold text-2xl md:text-3xl mb-2">
-              {lang === 'mr' ? 'MSP दर २०२४-२५ पाहा' : 'Check MSP Rates 2024-25'}
-            </h2>
-            <p className="text-saffron-100 text-sm">
-              {lang === 'mr' ? 'सरकारने घोषित केलेले किमान आधारभूत किंमत' : 'Minimum Support Price announced by Govt of India — CCEA'}
-            </p>
+            <div className="text-saffron-100 text-xs font-semibold uppercase tracking-wider mb-2">CCEA Announced 2024-25</div>
+            <h3 className="font-heading font-bold text-2xl md:text-3xl mb-2">{lang==='mr'?'MSP दर २०२४-२५ पाहा':'Check MSP Rates 2024-25'}</h3>
+            <p className="text-saffron-100 text-sm">{lang==='mr'?'सरकारने घोषित केलेले खरीप व रब्बी पिकांचे MSP दर':'Government declared MSP for Kharif & Rabi crops — CCEA'}</p>
           </div>
-          <Link to="/msp" className="bg-white text-saffron-700 font-bold font-display px-6 md:px-8 py-3 rounded-lg hover:bg-saffron-50 transition-colors shadow-lg text-center w-full sm:w-auto">
-            MSP दर पाहा →
-          </Link>
+          <Link to="/msp" className="bg-white text-saffron-700 hover:bg-saffron-50 font-bold font-heading px-6 sm:px-8 py-3.5 rounded-xl transition-colors shadow-lg whitespace-nowrap shrink-0 text-sm w-full sm:w-auto text-center">{lang==='mr'?'MSP दर पाहा':'View MSP Rates'}</Link>
         </div>
       </section>
 
       {/* CTA */}
       {!user && (
-        <section className="py-16 text-center max-w-2xl mx-auto px-4">
-          <div className="text-5xl mb-4">🌱</div>
-          <h2 className="section-title mb-3">
-            {lang === 'mr' ? 'आजच FarmConnect मध्ये सामील व्हा' : 'Join FarmConnect Today'}
-          </h2>
-          <p className="text-gray-500 mb-8">
-            {lang === 'mr' ? 'शेतकऱ्यांना थेट विक्रेत्याशी जोडणारे व्यासपीठ — मोफत नोंदणी' : 'The platform connecting farmers directly to vendors — free registration'}
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link to="/register" className="btn-primary px-8 py-3 text-base">
-              {lang === 'mr' ? 'शेतकरी म्हणून नोंदणी करा' : 'Register as Farmer'}
-            </Link>
-            <Link to="/register?role=vendor" className="btn-secondary px-8 py-3 text-base">
-              {lang === 'mr' ? 'विक्रेता म्हणून नोंदणी करा' : 'Register as Vendor'}
-            </Link>
+        <section className="page-hero py-16 md:py-20">
+          <div className="section text-center">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl mb-4">{lang==='mr'?'आजच FarmConnect मध्ये सामील व्हा':'Join FarmConnect Today'}</h2>
+            <p className="text-brand-300 mb-8 text-sm max-w-lg mx-auto">{lang==='mr'?'मोफत नोंदणी करा आणि थेट विक्रेत्यांकडून पीक खरेदी भाव मिळवा.':'Register free and get direct access to crop buying prices from verified vendors.'}</p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Link to="/register?tab=register&role=farmer" className="btn-secondary px-8 py-3.5 text-sm shadow-lg">{lang==='mr'?'शेतकरी म्हणून नोंदणी':'Register as Farmer'}</Link>
+              <Link to="/register?tab=register&role=vendor" className="bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold px-8 py-3.5 rounded-xl transition-all text-sm">{lang==='mr'?'विक्रेता म्हणून नोंदणी':'Register as Vendor'}</Link>
+            </div>
           </div>
         </section>
       )}
